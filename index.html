@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            min-height: auto;
+            padding: 20px;
+            color: #333;
+            text-align: center;
+            position: relative;
+        }
+        .animated-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .circle {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 123, 255, 0.3);
+            border-radius: 50%;
+            animation: move 10s infinite linear;
+        }
+        @keyframes move {
+            0% { transform: translateY(0px); opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #222;
+            margin-top: 50px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+            text-align: left;
+            color: #000;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            object-position: top;
+        }
+        .card-content {
+            padding: 15px;
+        }
+        .card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1c2b6c;
+        }
+        .card p {
+            font-size: 1rem;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .card{
+                width: 93%;
+            }
+            .card img {
+                height: 550px;
+            }
+            .card p {
+            font-size: 1.5rem;
+            }
+            .card h3 {
+            font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const bg = document.querySelector(".animated-bg");
+                for (let i = 0; i < 20; i++) {
+                    let circle = document.createElement("div");
+                    circle.classList.add("circle");
+                    circle.style.left = Math.random() * 100 + "vw";
+                    circle.style.top = Math.random() * 100 + "vh";
+                    circle.style.animationDuration = Math.random() * 10 + 5 + "s";
+                    circle.style.width = circle.style.height = Math.random() * 50 + 20 + "px";
+                    bg.appendChild(circle);
+                }
+            });
+        </script>
+    </div>
+    <h1>Family Details</h1>
+    <div class="container">
+        <div class="card">
+            <img src="Ajaz-waris.jpg" alt="Family Member">
+            <div class="card-content">
+                <h3>Ajaz Waris</h3>
+                <p>B.Ed</p>
+                
+                <p>Father</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="faiz.png" alt="Family Member">
+            <div class="card-content">
+                <h3>Faizur Rahman</h3>
+                <p>Web Developer</p>
+                <p>Innoric Infosystems Pvt. Ltd</p>
+                <p>Brother</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="ausaf.jpg" alt="Family Member">
+            <div class="card-content">
+                <h3>Ausaf Alam</h3>
+                <p>B.Tech</p>
+                <p>Jamia Millia Islamia, Delhi</p>
+                <p>Brother</p>
+            </div>
+        </div>
+        <div class="card">
+            <img src="aleem.jpg" alt="Family Member">
+            <div class="card-content">
+                <h3>Abdul Aleem</h3>
+                <p>Intermediate</p>
+                <p>Dr. Bhimrao Ambedkar Intermediate College</p>
+                <p>Brother</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
