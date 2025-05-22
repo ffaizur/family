@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --card-bg: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            touch-action: manipulation;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Parents Section */
+        .parents-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Brothers Section */
+        .brothers-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .family-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .family-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-image {
+            height: 320px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.5s ease;
+        }
+
+        .family-card:hover .card-image img {
+            transform: scale(1.03);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-content h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .card-content p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .role {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Animation for cards */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .family-card {
+            animation: fadeIn 0.6s ease forwards;
+            opacity: 0;
+        }
+        .img{
+            background-color: #6b7280;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            touch-action: pan-y;
+        }
+
+        .lightbox.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 80vh;
+            position: relative;
+            text-align: center;
+            width: 100%;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border: 3px solid white;
+            border-radius: 5px;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+
+        .lightbox-caption {
+            color: white;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .lightbox-caption .name {
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+
+        .lightbox-caption .role {
+            background: var(--primary);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 1rem;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 1001;
+        }
+
+        .close-btn:hover {
+            color: #ccc;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 10px 15px;
+            user-select: none;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            z-index: 1001;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .prev {
+            left: 15px;
+        }
+
+        .next {
+            right: 15px;
+        }
+
+        /* Mobile touch areas for easier navigation */
+        .touch-nav {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 30%;
+            z-index: 1000;
+        }
+
+        .touch-prev {
+            left: 0;
+        }
+
+        .touch-next {
+            right: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .parents-section {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto 2rem;
+            }
+            
+            .brothers-section {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            .card-image {
+                height: 350px;
+            }
+
+            .nav-btn {
+                font-size: 30px;
+                padding: 8px 12px;
+            }
+
+            .prev {
+                left: 5px;
+            }
+
+            .next {
+                right: 5px;
+            }
+
+            .lightbox-caption {
+                font-size: 1rem;
+            }
+
+            .lightbox-caption .name {
+                font-size: 1.2rem;
+            }
+
+            .touch-nav {
+                width: 40%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card-content h3 {
+                font-size: 1.3rem;
+            }
+            
+            .card-image {
+                height: 300px;
+            }
+
+            .close-btn {
+                font-size: 30px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .nav-btn {
+                font-size: 25px;
+                padding: 5px 10px;
+            }
+
+            .lightbox-content img {
+                max-height: 60vh;
+            }
+
+            .touch-nav {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Our Family</h1>
+            <p class="subtitle">Meet the wonderful members of our family</p>
+        </header>
+
+        <!-- Parents Section -->
+        <div class="parents-section">
+            <div class="family-card">
+                <div class="card-image" onclick="openLightbox(0)">
+                    <img src="Ajaz waris.jpg" alt="Ajaz Waris">
+                </div>
+                <div class="card-content">
+                    <h3>Ajaz Waris</h3>
+                    <p>B.Ed</p>
+                    <span class="role">Father</span>
+                </div>
+            </div>
+
+            <div class="family-card">
+                <div class="card-image" onclick="openLightbox(1)">
+                    <div class="img"></div>
+                </div>
+                <div class="card-content">
+                    <h3>Shameeun Nisha</h3>
+                    <p>House Wife</p>
+                    <span class="role">Mother</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brothers Section -->
+        <div class="brothers-section">
+            <div class="family-card">
+                <div class="card-image" onclick="openLightbox(2)">
+                    <img src="faiz.png" alt="Faizur Rahman">
+                </div>
+                <div class="card-content">
+                    <h3>Faizur Rahman</h3>
+                    <p>Web Developer</p>
+                    <p>Innoric Infosystems Pvt. Ltd</p>
+                    <span class="role">Brother</span>
+                </div>
+            </div>
+
+            <div class="family-card">
+                <div class="card-image" onclick="openLightbox(3)">
+                    <img src="ausaf.jpg" alt="Ausaf Alam">
+                </div>
+                <div class="card-content">
+                    <h3>Ausaf Alam</h3>
+                    <p>B.Tech</p>
+                    <p>Jamia Millia Islamia, Delhi</p>
+                    <span class="role">Brother</span>
+                </div>
+            </div>
+
+            <div class="family-card">
+                <div class="card-image" onclick="openLightbox(4)">
+                    <img src="aleem.jpg" alt="Abdul Aleem">
+                </div>
+                <div class="card-content">
+                    <h3>Abdul Aleem</h3>
+                    <p>Intermediate</p>
+                    <p>Dr. Bhimrao Ambedkar Intermediate College</p>
+                    <span class="role">Brother</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox HTML -->
+    <div id="lightbox" class="lightbox">
+        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+        <span class="nav-btn prev" onclick="changeSlide(-1)">&#10094;</span>
+        <span class="nav-btn next" onclick="changeSlide(1)">&#10095;</span>
+        
+        <!-- Touch navigation areas -->
+        <div class="touch-nav touch-prev" ontouchstart="touchStart(-1)" ontouchend="touchEnd()"></div>
+        <div class="touch-nav touch-next" ontouchstart="touchStart(1)" ontouchend="touchEnd()"></div>
+        
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-caption">
+                <div class="name" id="lightbox-name"></div>
+                <div class="role" id="lightbox-role"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Family members data
+        const familyMembers = [
+            {
+                image: "Ajaz waris.jpg",
+                name: "Ajaz Waris",
+                role: "Father",
+                description: "B.Ed"
+            },
+            {
+                image: "",
+                name: "Shameeun Nisha",
+                role: "Mother",
+                description: "House Wife"
+            },
+            {
+                image: "faiz.png",
+                name: "Faizur Rahman",
+                role: "Brother",
+                description: "Web Developer at Innoric Infosystems Pvt. Ltd"
+            },
+            {
+                image: "ausaf.jpg",
+                name: "Ausaf Alam",
+                role: "Brother",
+                description: "B.Tech at Jamia Millia Islamia, Delhi"
+            },
+            {
+                image: "aleem.jpg",
+                name: "Abdul Aleem",
+                role: "Brother",
+                description: "Intermediate at Dr. Bhimrao Ambedkar Intermediate College"
+            }
+        ];
+
+        let currentSlide = 0;
+        let touchTimer;
+
+        // Lightbox functionality
+        function openLightbox(index) {
+            currentSlide = index;
+            updateLightbox();
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            
+            // Wrap around if at beginning or end
+            if (currentSlide < 0) {
+                currentSlide = familyMembers.length - 1;
+            } else if (currentSlide >= familyMembers.length) {
+                currentSlide = 0;
+            }
+            
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const member = familyMembers[currentSlide];
+            document.getElementById('lightbox-img').src = member.image;
+            document.getElementById('lightbox-name').textContent = member.name;
+            document.getElementById('lightbox-role').textContent = member.role;
+        }
+
+        // Touch navigation functions
+        function touchStart(direction) {
+            touchTimer = setTimeout(() => {
+                changeSlide(direction);
+            }, 100);
+        }
+
+        function touchEnd() {
+            clearTimeout(touchTimer);
+        }
+
+        // Swipe detection
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.getElementById('lightbox').addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.getElementById('lightbox').addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const threshold = 50; // Minimum swipe distance
+            if (touchStartX - touchEndX > threshold) {
+                // Swipe left
+                changeSlide(1);
+            } else if (touchEndX - touchStartX > threshold) {
+                // Swipe right
+                changeSlide(-1);
+            }
+        }
+
+        // Close lightbox when clicking outside the image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this || e.target.classList.contains('touch-nav')) {
+                closeLightbox();
+            }
+        });
+
+        // Close lightbox with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+            // Arrow key navigation
+            else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+            else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+    </script>
+</body>
+</html>
